@@ -3,6 +3,7 @@ package com.example.salazar.myapp2;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,6 +21,13 @@ public class Pop extends Activity{
         c = this.getIntent().getExtras();
         TextView t=(TextView)findViewById(R.id.textView3);
         t.setText(c.getString("comp"));
+        DisplayMetrics dm =new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+
+        getWindow().setLayout((int) (width*0.8),(int) (height * 0.6));
 
 
         //  RelativeLayout rl = (RelativeLayout)findViewById(R.id.lay);
