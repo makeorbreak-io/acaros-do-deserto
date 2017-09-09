@@ -22,7 +22,9 @@
         <activity android:name=".ContinuousCaptureActivity"></activity>
         <activity android:name=".NotFound"></activity>
         <activity android:name=".Found"></activity>
-        <activity android:name=".Pop"></activity>
+        <activity android:name=".Pop"
+            android:theme="@style/AppTheme.CustomTheme">
+        </activity>
     </application>
 
 </manifest>

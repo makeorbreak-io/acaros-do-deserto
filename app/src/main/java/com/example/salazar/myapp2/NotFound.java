@@ -130,10 +130,9 @@ public class NotFound extends Activity{
             try {
                 String android_id = Settings.Secure.getString(NotFound.this.getContentResolver(),
                         Settings.Secure.ANDROID_ID);
-                String urli;
-                urli = "http://porto-quest.herokuapp.com/api/v2/uploadata/";
-                urli = urli + "?device="+ android_id + "&ingredientes=" + URLEncoder.encode(this.ingredientes,"UTF-8") + "&scan=" + b.getString("scan") + "&supermarket=" + URLEncoder.encode(this.supermercado,"UTF-8") + "&name=" + URLEncoder.encode(this.name,"UTF-8");
-              //  urli ="http://porto-quest.herokuapp.com/api/getusers";
+                 String urli;
+                urli = "http://porto-quest.herokuapp.com/api/v2/uploadata/" + "?device="+ android_id + "&ingredientes=" + URLEncoder.encode(this.ingredientes,"UTF-8") + "&scan=" + b.getString("scan") + "&supermarket=" + URLEncoder.encode(this.supermercado,"UTF-8") + "&name=" + URLEncoder.encode(this.name,"UTF-8");
+                // urli ="http://porto-quest.herokuapp.com/api/getusers";
                 URL objecto=new URL(urli);
                 HttpURLConnection cone = (HttpURLConnection) objecto.openConnection();
         //        cone.setDoInput(true);
@@ -142,7 +141,6 @@ public class NotFound extends Activity{
                 cone.connect();
                 int responseCode = cone.getResponseCode();
                 this.code = responseCode;
-
 
             }
             catch (Exception e){

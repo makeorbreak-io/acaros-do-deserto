@@ -12,4 +12,9 @@
         <item name="colorPrimaryDark">#ffb341</item>
         <item name="colorAccent">#ffb341</item>
     </style>
+    <style name="AppTheme.CustomTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
+
 </resources>

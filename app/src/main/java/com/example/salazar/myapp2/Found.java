@@ -25,6 +25,7 @@ public class Found extends Activity {
         c = new Bundle();
         b = this.getIntent().getExtras();
         setContentView(R.layout.found);
+        getActionBar().setTitle("Ingredientes");
         LinearLayout lView = (LinearLayout)findViewById(R.id.mylinearlayout);
         final SpannableString ss = new SpannableString(b.getString("ingredientes"));
         final String[] ingred = b.getString("ingredientes").split(",");
