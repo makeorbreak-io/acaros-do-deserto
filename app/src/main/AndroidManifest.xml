@@ -26,6 +26,8 @@
             android:theme="@style/AppTheme.CustomTheme">
         </activity>
         <activity android:name=".EditSettings"></activity>
+
+        <activity android:name=".MyList"></activity>
     </application>
 
 </manifest>
