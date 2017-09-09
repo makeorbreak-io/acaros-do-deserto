@@ -73,4 +73,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void settings(View view) {
+        Intent intent = new Intent(this, EditSettings.class);
+        startActivity(intent);
+    }
+
 }
