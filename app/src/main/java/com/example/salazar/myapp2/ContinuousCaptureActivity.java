@@ -2,27 +2,21 @@ package com.example.salazar.myapp2;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Base64;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.graphics.Bitmap;
-import android.widget.Toast;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.BeepManager;
 import com.journeyapps.barcodescanner.BarcodeCallback;
@@ -30,23 +24,15 @@ import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import com.example.salazar.myapp2.R;
-
-import org.json.JSONObject;
-
-import javax.net.ssl.HttpsURLConnection;
 
 
 /**
@@ -55,11 +41,12 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class ContinuousCaptureActivity extends Activity{
     private static final String TAG = ContinuousCaptureActivity.class.getSimpleName();
+    private static final String API_HOST = "http://2250cee4.ngrok.io";
     private DecoratedBarcodeView barcodeView;
     private BeepManager beepManager;
     private String lastText;
     private Button switchFlashlightButton;
-    String[] androidVersionNames;
+    String[] ingredientNames;
     private ProgressBar spinner;
     private Context ctx;
     Bundle b;
@@ -128,9 +115,8 @@ public class ContinuousCaptureActivity extends Activity{
         protected Void doInBackground(Void... params) {
             try {
                 String url,url2;
-                url="http://porto-quest.herokuapp.com/api/v2/prodexists/";
-                url2 = "http://porto-quest.herokuapp.com/api/v2/geting";
-                url = url + "?scan="+result;
+                url = API_HOST + "/api/product/" + result;
+                url2 = API_HOST + "/api/ingredients";
 
                 URL object=new URL(url);
                 URL object2=new URL(url2);
@@ -144,19 +130,22 @@ public class ContinuousCaptureActivity extends Activity{
                 int responseCode = con.getResponseCode();
                 con.connect();
                 con2.connect();
-                InputStream in = new BufferedInputStream(con2.getInputStream());
-                StringBuilder total = new StringBuilder();
-                BufferedReader rd = new BufferedReader(new InputStreamReader(in));
+                String ingredientsJsonString = "";
+                BufferedReader rd = new BufferedReader(new InputStreamReader(con2.getInputStream()));
                 String line;
 
-                int j =0;
                 while ((line = rd.readLine()) != null) {
-                    total.append(line);
+                    ingredientsJsonString += line;
                 }
-                String news = total.toString();
-                news = news.replace("{", "");
-                news = news.replace("}", "");
-                androidVersionNames = news.split(",");
+
+                JsonArray ingredientsJsonArray = (new JsonParser()).parse(ingredientsJsonString).getAsJsonArray();
+                List<String> ingredientsList = new ArrayList<>();
+                Iterator<JsonElement> ingredientsIt = ingredientsJsonArray.iterator();
+                while (ingredientsIt.hasNext()) {
+                    ingredientsList.add(ingredientsIt.next().getAsJsonObject().get("name").getAsString());
+                }
+
+                ingredientNames = ingredientsList.toArray(new String[0]);
 
                 this.code = responseCode;
 
@@ -180,7 +169,7 @@ public class ContinuousCaptureActivity extends Activity{
             }
             else{
                 Intent intenti = new Intent(ContinuousCaptureActivity.this, NotFound.class);
-                b.putStringArray("androidVersionNames", androidVersionNames);
+                b.putStringArray("ingredientNames", ingredientNames);
                 intenti.putExtras(b);
                 startActivity(intenti);
                 /*
@@ -188,7 +177,7 @@ public class ContinuousCaptureActivity extends Activity{
                 // initiate a MultiAutoCompleteTextView
                 MultiAutoCompleteTextView simpleMultiAutoCompleteTextView = (MultiAutoCompleteTextView) findViewById(R.id.simpleMultiAutoCompleteTextView);
 // set adapter to fill the data in suggestion list
-                ArrayAdapter<String> versionNames = new ArrayAdapter<String>(ContinuousCaptureActivity.this, android.R.layout.simple_list_item_1, androidVersionNames);
+                ArrayAdapter<String> versionNames = new ArrayAdapter<String>(ContinuousCaptureActivity.this, android.R.layout.simple_list_item_1, ingredientNames);
                 simpleMultiAutoCompleteTextView.setAdapter(versionNames);
 
 // set threshold value 1 that help us to start the searching from first character

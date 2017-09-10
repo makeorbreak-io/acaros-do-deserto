@@ -31,13 +31,14 @@ import static java.security.AccessController.getContext;
  */
 
 public class NotFound extends Activity{
+    private static final String API_HOST = "http://2250cee4.ngrok.io";
     String[] down;
     Bundle b;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         b=this.getIntent().getExtras();
-        down=b.getStringArray("androidVersionNames");
+        down=b.getStringArray("ingredientNames");
         // public void begin(){
         setContentView(R.layout.notfound);
         // initiate a MultiAutoCompleteTextView
@@ -131,7 +132,7 @@ public class NotFound extends Activity{
                 String android_id = Settings.Secure.getString(NotFound.this.getContentResolver(),
                         Settings.Secure.ANDROID_ID);
                  String urli;
-                urli = "http://porto-quest.herokuapp.com/api/v2/uploadata/" + "?device="+ android_id + "&ingredientes=" + URLEncoder.encode(this.ingredientes,"UTF-8") + "&scan=" + b.getString("scan") + "&supermarket=" + URLEncoder.encode(this.supermercado,"UTF-8") + "&name=" + URLEncoder.encode(this.name,"UTF-8");
+                urli = API_HOST + "/api/addpendingproduct" + "?device="+ android_id + "&ingredients=" + URLEncoder.encode(this.ingredientes,"UTF-8") + "&barcode=" + b.getString("scan") + "&shop=" + URLEncoder.encode(this.supermercado,"UTF-8") + "&name=" + URLEncoder.encode(this.name,"UTF-8");
                 // urli ="http://porto-quest.herokuapp.com/api/getusers";
                 URL objecto=new URL(urli);
                 HttpURLConnection cone = (HttpURLConnection) objecto.openConnection();
