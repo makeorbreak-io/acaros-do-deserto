@@ -1,23 +1,5 @@
 package com.example.salazar.myapp2;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.CheckedTextView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,34 +8,49 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
-import static com.example.salazar.myapp2.R.layout.settings;
-import static java.lang.Thread.sleep;
+import android.app.ListActivity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 
 /**
- * Created by caesar on 9/8/17.
+ * Created by caesar on 9/9/17.
  */
 
-public class EditSettings extends Activity {
+public class MyList extends ListActivity {
     ArrayList<String> ingredientsArray;
-    Bundle b;
     ProgressDialog pd;
-    ViewGroup checkboxContainer;
 
-    protected void onCreate(Bundle savedInstanceState) {
+    /** Called when the activity is first created. */
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
         ingredientsArray = new ArrayList<String>();
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings);
-        b=this.getIntent().getExtras();
-        checkboxContainer = (ViewGroup) findViewById(R.id.checkbox_container);
-        new JsonTask().execute("http://9d4ae7fe.ngrok.io/api/allergens");
+        // create an array of Strings, that will be put to our ListActivity
+        new MyList.JsonTask().execute("http://9d4ae7fe.ngrok.io/api/allergens");
+    }
+
+    private List<Model> getModel() {
+        List<Model> list = new ArrayList<Model>();
+        for (int i=0; i< ingredientsArray.size(); i++)
+        {
+            list.add(get(ingredientsArray.get(i)));
+        }
+        return list;
+    }
+
+    private Model get(String s) {
+        return new Model(s);
     }
 
     private class JsonTask extends AsyncTask<String, String, String> {
 
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(EditSettings.this);
+            pd = new ProgressDialog(MyList.this);
             pd.setMessage("Please wait");
             pd.setCancelable(false);
             pd.show();
@@ -117,46 +114,9 @@ public class EditSettings extends Activity {
             if (pd.isShowing()){
                 pd.dismiss();
             }
-            for (int i = 0; i < ingredientsArray.size(); i++) {
-                CheckBox checkBox = new CheckBox(EditSettings.this);
-                checkBox.setText(ingredientsArray.get(i));
-                checkboxContainer.addView(checkBox);
-            }
-
+            ArrayAdapter<Model> adapter = new InteractiveArrayAdapter(MyList.this,
+                    getModel());
+            setListAdapter(adapter);
         }
-    }
-
-    public void saveSettings(View view) {
-        ArrayList<String> output = new ArrayList<String>();
-        int z= checkboxContainer.getChildCount();
-        for (int i=0; i< checkboxContainer.getChildCount(); i++)
-        {
-
-                CheckBox checkBox = (CheckBox) checkboxContainer.getChildAt(i);
-                if (checkBox.isChecked()) {
-                    output.add(checkBox.getText().toString());
-                }
-
-        }
-        saveAllergies(output);
-    }
-
-
-
-    public boolean saveAllergies(ArrayList<String> sKey)
-    {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(EditSettings.this);
-        SharedPreferences.Editor mEdit1 = sp.edit();
-    /* sKey is an array */
-        mEdit1.putInt("Status_size", sKey.size());
-
-        for(int i=0;i<sKey.size();i++)
-        {
-            mEdit1.remove("Status_" + i);
-            mEdit1.putString("Status_" + i, sKey.get(i));
-        }
-
-        return mEdit1.commit();
     }
 }
-
