@@ -5,6 +5,10 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.Window;
@@ -64,8 +68,6 @@ public class Pop extends Activity{
     }
 
     private class httpdo extends AsyncTask<Void ,  Void,  Void>{
-
-
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -103,6 +105,11 @@ public class Pop extends Activity{
                    runOnUiThread(new Runnable() {
                        @Override
                        public void run() {
+                           TextView t3=(TextView)findViewById(R.id.textView4);
+                           SpannableString text = new SpannableString("Avaliação do produto: \n LIVRE DE RISCO");
+// make "Lorem" (characters 0 to 5) red
+                           text.setSpan(new ForegroundColorSpan(Color.GREEN), 24, 38, 0);
+                           t3.setText(text, TextView.BufferType.SPANNABLE);
                            getWindow().setBackgroundDrawable(drawable);
                        }
                    });
@@ -120,6 +127,11 @@ public class Pop extends Activity{
                                    public void run() {
                                        TextView t=(TextView)findViewById(R.id.textView3);
                                        TextView t2=(TextView)findViewById(R.id.textView2);
+                                       TextView t3=(TextView)findViewById(R.id.textView4);
+                                       SpannableString text = new SpannableString("Avaliação do produto: \n TÓXICO");
+// make "Lorem" (characters 0 to 5) red
+                                       text.setSpan(new ForegroundColorSpan(Color.RED), 24, 30, 0);
+                                       t3.setText(text, TextView.BufferType.SPANNABLE);
                                        t.setText(c.getString("comp"));
                                        try {
                                            t2.setText(p.getString("description"));
@@ -131,26 +143,80 @@ public class Pop extends Activity{
                                });
                            }
                            else if (p.getString("danger").equals("D")){
-                               GradientDrawable drawable = new GradientDrawable();
+                              final GradientDrawable drawable = new GradientDrawable();
                                drawable.setShape(GradientDrawable.RECTANGLE);
                                drawable.setStroke(5, Color.rgb(255,69,0));
                                drawable.setColor(Color.BLACK);
-                               getWindow().setBackgroundDrawable(drawable);
+                               runOnUiThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       TextView t=(TextView)findViewById(R.id.textView3);
+                                       TextView t2=(TextView)findViewById(R.id.textView2);
+                                       TextView t3=(TextView)findViewById(R.id.textView4);
+                                       SpannableString text = new SpannableString("Avaliação do produto: \n PERIGOSO");
+// make "Lorem" (characters 0 to 5) red
+                                       text.setSpan(new ForegroundColorSpan(Color.rgb(255,140,0)), 24, 32, 0);
+                                       t3.setText(text, TextView.BufferType.SPANNABLE);
+                                       t.setText(c.getString("comp"));
+                                       try {
+                                           t2.setText(p.getString("description"));
+                                       } catch (JSONException e) {
+                                           e.printStackTrace();
+                                       }
+                                       getWindow().setBackgroundDrawable(drawable);
+                                   }
+                               });
                            }
                            else if(p.getString("danger").equals("T")){
-                               GradientDrawable drawable = new GradientDrawable();
+                              final GradientDrawable drawable = new GradientDrawable();
                                drawable.setShape(GradientDrawable.RECTANGLE);
                                drawable.setStroke(5, Color.YELLOW);
                                drawable.setColor(Color.BLACK);
 
-                               getWindow().setBackgroundDrawable(drawable);
+                               runOnUiThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       TextView t=(TextView)findViewById(R.id.textView3);
+                                       TextView t3=(TextView)findViewById(R.id.textView4);
+                                       TextView t2=(TextView)findViewById(R.id.textView2);
+                                       SpannableString text = new SpannableString("Avaliação do produto: \n RISCO MODERADO");
+// make "Lorem" (characters 0 to 5) red
+                                       text.setSpan(new ForegroundColorSpan(Color.YELLOW), 24, 38, 0);
+                                       t3.setText(text, TextView.BufferType.SPANNABLE);
+                                       t.setText(c.getString("comp"));
+                                       try {
+                                           t2.setText(p.getString("description"));
+                                       } catch (JSONException e) {
+                                           e.printStackTrace();
+                                       }
+                                       getWindow().setBackgroundDrawable(drawable);
+                                   }
+                               });
                            }
                            else {
-                               GradientDrawable drawable = new GradientDrawable();
+                               final GradientDrawable drawable = new GradientDrawable();
                                drawable.setShape(GradientDrawable.RECTANGLE);
                                drawable.setStroke(5, Color.GREEN);
                                drawable.setColor(Color.BLACK);
-                               getWindow().setBackgroundDrawable(drawable);
+                               runOnUiThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       TextView t=(TextView)findViewById(R.id.textView3);
+                                       TextView t2=(TextView)findViewById(R.id.textView2);
+                                       TextView t3=(TextView)findViewById(R.id.textView4);
+                                       SpannableString text = new SpannableString("Avaliação do produto: \n LIVRE DE RISCO");
+// make "Lorem" (characters 0 to 5) red
+                                       text.setSpan(new ForegroundColorSpan(Color.GREEN), 24, 38, 0);
+                                       t3.setText(text, TextView.BufferType.SPANNABLE);
+                                       t.setText(c.getString("comp"));
+                                       try {
+                                           t2.setText(p.getString("description"));
+                                       } catch (JSONException e) {
+                                           e.printStackTrace();
+                                       }
+                                       getWindow().setBackgroundDrawable(drawable);
+                                   }
+                               });
 
                            }
 
